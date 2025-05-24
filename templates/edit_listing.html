@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Edit Listing</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% for field in form %}
+                            {% if field.name != 'images' %}
+                                <div class="form-group mb-3">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field.errors }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Current Images Section -->
+                        <div class="form-group mb-4">
+                            <label class="form-label">Current Images</label>
+                            <div class="row">
+                                {% for image in listing.images.all %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <img src="{{ image.image.url }}" class="card-img-top" alt="Listing image" style="height: 200px; object-fit: cover;">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <input type="radio" name="primary_image" value="{{ image.id }}" 
+                                                           class="form-check-input" {% if image.is_primary %}checked{% endif %}>
+                                                    <label class="form-check-label">Set as primary</label>
+                                                </div>
+                                                <button type="button" class="btn btn-danger btn-sm mt-2" 
+                                                        onclick="deleteImage('{{ image.id }}')">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Add New Images Section -->
+                        <div class="form-group mb-4">
+                            <label class="form-label">Add New Images</label>
+                            <div id="image-upload-container">
+                                <div class="image-upload-field mb-3">
+                                    <input type="file" name="images" class="form-control" accept="image/*">
+                                    <div class="form-check mt-2">
+                                        <input type="checkbox" name="is_primary" class="form-check-input">
+                                        <label class="form-check-label">Set as primary</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addImageField()">Add Another Image</button>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Update Listing</button>
+                            <a href="{% url 'listing_detail' listing.pk %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function addImageField() {
+    const container = document.getElementById('image-upload-container');
+    const newField = document.createElement('div');
+    newField.className = 'image-upload-field mb-3';
+    newField.innerHTML = `
+        <input type="file" name="images" class="form-control" accept="image/*">
+        <div class="form-check mt-2">
+            <input type="checkbox" name="is_primary" class="form-check-input">
+            <label class="form-check-label">Set as primary</label>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm mt-2" onclick="this.parentElement.remove()">Remove</button>
+    `;
+    container.appendChild(newField);
+}
+
+function deleteImage(imageId) {
+    if (confirm('Are you sure you want to delete this image?')) {
+        fetch(`/listings/image/${imageId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Remove the image card from the DOM
+                const imageCard = document.querySelector(`[data-image-id="${imageId}"]`);
+                if (imageCard) {
+                    imageCard.remove();
+                }
+                // Show success message
+                showAlert('Image deleted successfully!');
+            } else {
+                throw new Error(data.message || 'Error deleting image');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error deleting image. Please try again.', 'error');
+        });
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('.card-body').firstChild);
+    
+    // Auto dismiss after 1 second
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 1000);
+}
+</script>
+{% endblock %}
+{% endblock %} 

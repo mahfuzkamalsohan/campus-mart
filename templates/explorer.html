@@ -20,7 +20,7 @@
       <div class="account-wrapper">
         <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
         <div class="account-dropdown" id="accountDropdown">
-          <a href="#" class="dropdown-item">My Profile</a>
+          <a href="{% url 'my_listings' %}" class="dropdown-item">My Listings</a>
           <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
           <!-- <a href="#" class="dropdown-item">Logout</a> -->
         </div>
@@ -32,9 +32,9 @@
   <div class="container">
     <aside class="sidebar">
       <ul>
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Listings</a></li>
-        <li><a href="#">Profile</a></li>
+        <li class="active"><a href="{% url 'explorer' %}">Home</a></li>
+        <li><a href="{% url 'my_listings' %}">My Listings</a></li>
+        <li><a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a></li>
       </ul>
     </aside>
 
@@ -47,7 +47,7 @@
       <section class="listings-section">
         <div class="listings-header">
           <h3>Listings</h3>
-          <a href="#" class="create-listing-btn">Create Listing</a>
+          <a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a>
         </div>
 
         <div class="filter-bar">
@@ -104,27 +104,23 @@
         </div>
 
         <div class="listings-grid">
+          {% for listing in listings %}
           <div class="listing-card">
-            <h4>Bicycle for Sale</h4>
-            <p>A well-maintained bike, perfect for campus commuting.</p>
-            <p class="price">$50</p>
-            <p class="visibility">Visible to: IUT Students</p>
-            <a href="#" class="view-details-btn">View Details</a>
+            {% if listing.images.exists %}
+            <img src="{{ listing.images.first.image.url }}" alt="{{ listing.title }}" class="listing-image">
+            {% endif %}
+            <h4>{{ listing.title }}</h4>
+            <p>{{ listing.description|truncatewords:20 }}</p>
+            <p class="price">${{ listing.price }}</p>
+            <p class="visibility">Visible to: {{ listing.university }} Students</p>
+            <a href="{% url 'listing_detail' listing.pk %}" class="view-details-btn">View Details</a>
           </div>
-          <div class="listing-card">
-            <h4>Math Tutoring Service</h4>
-            <p>Offering calculus tutoring for 1st-year students.</p>
-            <p class="price">$15/hr</p>
-            <p class="visibility">Visible to: All Students</p>
-            <a href="#" class="view-details-btn">View Details</a>
+          {% empty %}
+          <div class="no-listings">
+            <p>No listings available. Be the first to create one!</p>
+            <a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a>
           </div>
-          <div class="listing-card">
-            <h4>Laptop (Budget)</h4>
-            <p>Used laptop in good condition, ideal for students.</p>
-            <p class="price">$200</p>
-            <p class="visibility">Visible to: DU Students</p>
-            <a href="#" class="view-details-btn">View Details</a>
-          </div>
+          {% endfor %}
         </div>
       </section>
 
