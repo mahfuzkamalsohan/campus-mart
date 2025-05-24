@@ -252,13 +252,13 @@
 <body>
     <div class="chat-widget" id="chatWidget">
         <div class="chat-header" onclick="toggleChat()">
-            <img src="https://chat.openai.com/favicon.ico" alt="ChatGPT">
+            <img src="{% static 'campus-mart-4.png' %}" alt="Logo" class="logo" style="width: 50px; height: 50px;">
             <h2>ChatBot</h2>
         </div>
         <div class="chat-content">
             <div class="chat-area" id="chat-area">
                 <div class="message-bot">
-                    <div class="avatar">G</div>
+                    <div class="avatar">CM</div>
                     <div class="text">Hello {{ user.username }}, how can I help you today?</div>
                 </div>
             </div>
@@ -429,7 +429,7 @@
             
             const avatar = document.createElement('div');
             avatar.className = 'avatar';
-            avatar.textContent = isUser ? 'U' : 'G';
+            avatar.textContent = isUser ? 'U' : 'CM';
             
             const textDiv = document.createElement('div');
             textDiv.className = 'text';
@@ -452,7 +452,7 @@
             
             const avatar = document.createElement('div');
             avatar.className = 'avatar';
-            avatar.textContent = isUser ? 'U' : 'G';
+            avatar.textContent = isUser ? 'U' : 'CM';
             
             const contentDiv = document.createElement('div');
             contentDiv.className = 'text';

@@ -124,7 +124,7 @@
             <h4>{{ listing.title }}</h4>
             <p>{{ listing.description|truncatewords:20 }}</p>
             <p class="price">${{ listing.price }}</p>
-            <p class="visibility">Visible to: {{ listing.university }} Students</p>
+            <!-- <p class="visibility">Visible to: {{ listing.university }} Students</p> -->
             <a href="{% url 'listing_detail' listing.pk %}" class="view-details-btn">View Details</a>
           </div>
           {% empty %}
@@ -152,8 +152,11 @@
       </section>
     </main>
   </div>
+  
+
 
 <script src="{% static 'explorer.js' %}"></script>
+
 <!-- <script src = "explorer.js"></script> -->
 </body>
 </html>
