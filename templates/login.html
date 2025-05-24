@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
   <div class="container">
@@ -15,7 +17,19 @@
     <div class="auth-box">
       
       <h2>Log In</h2>
-      <form>
+      
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      
+      <form method="POST" action="{% url 'loginpage' %}">
+        {% csrf_token %}    
         <label for="email-username">Email or Username</label>
         <input type="text" id="email-username" required>
         
@@ -34,11 +48,12 @@
       
       <button class="google-btn">
         <img src="https://www.google.com/favicon.ico" alt="Google">
-        Log in with Google
+        {% load socialaccount %}
+        <a href="{% provider_login_url 'google' %}">Log in with Google</a>
       </button>
       
       <div class="switch-link">
-        Don't have an account? <a href="signUp.html">Sign up</a>
+        Don't have an account? <a href="{% url 'signuppage' %}">Sign up</a>
       </div>
     </div>
   </div>
