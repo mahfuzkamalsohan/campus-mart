@@ -5,7 +5,7 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 import os
 from datetime import datetime
-
+from groq import Groq
 def chatbot(request):
     return render(request, 'chatbot.html')
 
@@ -21,6 +21,21 @@ def chat_view(request):
                 'message': f"Received your message: {message}"
             }
             
+            if message:
+                client = Groq(
+                    api_key=os.environ.get("GROQ_API_KEY"),
+                )
+
+                chat_completion = client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": message,
+                        }
+                    ],
+                    model="llama-3.3-70b-versatile",
+                )
+                return chat_completion.choices[0].message.content
             if image:
                 try:
                     # Create chat_images directory if it doesn't exist

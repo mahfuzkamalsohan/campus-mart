@@ -187,6 +187,17 @@ def chatbot(request):
                 'message': f"Received your message: {message}"
             }
             
+            def clean_response(text):
+                # Remove any leading/trailing whitespace
+                text = text.strip()
+                # Remove any extra newlines
+                text = ' '.join(text.split())
+                # Remove any special characters or formatting
+                text = text.replace('\n', ' ').replace('\r', '')
+                # Remove multiple spaces
+                text = ' '.join(text.split())
+                return text
+            
             if image:
                 try:
                     # Read the image data
@@ -207,7 +218,7 @@ def chatbot(request):
                     
                     # Get AI response for the image
                     ai_response = get_chatbot_response(image_data, request)
-                    response_data['message'] = ai_response
+                    response_data['message'] = clean_response(ai_response)
                     
                     # Clean up the response keyword
                     response_keyword = response_data['message'].strip().lower()
@@ -216,13 +227,39 @@ def chatbot(request):
                     # Remove any extra whitespace
                     response_keyword = ' '.join(response_keyword.split())
                     print(response_keyword)
-                    #render(request, 'explorer.html', {'query': response_keyword})
+                    
+                    # Extract product name from response
+                    if "the product you are searching for is" in response_keyword.lower():
+                        product_name = response_keyword.split("is ")[-1].strip()
+                        print(product_name)
+                        search(request, product_name)
                 except Exception as e:
                     print(f"Error processing image: {str(e)}")
                     response_data['message'] = "Error processing image. Please try again."
-            product_name = response_keyword.split("is ")[-1]
-            print(product_name)
-            search(request, product_name)
+            else:
+                # Handle text-only messages
+                try:
+                    # Get AI response for text message
+                    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+                    completion = client.chat.completions.create(
+                        model="meta-llama/llama-4-scout-17b-16e-instruct",
+                        messages=[
+                            {
+                                "role": "user",
+                                "content": message
+                            }
+                        ],
+                        temperature=1,
+                        max_completion_tokens=1024,
+                        top_p=1,
+                        stream=False,
+                        stop=None,
+                    )
+                    response_data['message'] = clean_response(completion.choices[0].message.content)
+                except Exception as e:
+                    print(f"Error processing text message: {str(e)}")
+                    response_data['message'] = "I'm sorry, I couldn't process your message at this time."
+            
             return JsonResponse(response_data)
             
         except Exception as e:
@@ -232,6 +269,7 @@ def chatbot(request):
             }, status=500)
     
     return render(request, 'chatbot.html')
+
 def search(request, product_name):
     return render(request, 'explorer.html', {'query': product_name})
     

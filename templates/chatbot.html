@@ -424,22 +424,8 @@
                                 textDiv.appendChild(searchButton);
                             }
                         } else {
-                            // If response is text only
-                            const messageDiv = addMessage(data.message, false);
-                            
-                            // Add search button if we have a product name
-                            if (productName) {
-                                const searchButton = document.createElement('button');
-                                searchButton.className = 'search-button';
-                                searchButton.innerHTML = '<i class="fas fa-search"></i> Search for this product';
-                                searchButton.onclick = function() {
-                                    window.location.href = `/?q=${encodeURIComponent(productName)}`;
-                                };
-                                
-                                const textDiv = messageDiv.querySelector('.text');
-                                textDiv.appendChild(document.createElement('br'));
-                                textDiv.appendChild(searchButton);
-                            }
+                            // If response is text only, just show the message without search button
+                            addMessage(data.message, false);
                         }
                     })
                     .catch(error => {
