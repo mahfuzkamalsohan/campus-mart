@@ -17,6 +17,9 @@
     <div class="auth-box">
       
       <h2>Log In</h2>
+      {% if error %}
+      <div class="error-message">{{ error }}</div>
+      {% endif %}
       
       {% if messages %}
       <div class="messages">

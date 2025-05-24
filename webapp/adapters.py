@@ -2,18 +2,26 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 
 class EduAccountAdapter(DefaultAccountAdapter):
     def is_open_for_signup(self, request):
-        # Always allow signup, we'll check email in pre_social_login
+        email = self._get_email_from_request(request)
+        if not email.endswith('.edu'):
+            messages.error(request, 'Only educational email addresses are allowed')
+            raise ImmediateHttpResponse(redirect('loginpage'))
         return True
+
+    def clean_email(self, email):
+        if not email.endswith('.edu'):
+            raise ValidationError("Only educational email addresses are allowed")
+        return email
 
     def pre_social_login(self, request, sociallogin):
         email = sociallogin.user.email
-        if not email or not email.endswith('.edu'):
-            messages.error(request, "Only educational email addresses are allowed.")
-            raise ImmediateHttpResponse(redirect('login'))
+        if not email.endswith('.edu'):
+            messages.error(request, 'Only educational email addresses are allowed')
+            raise ImmediateHttpResponse(redirect('loginpage'))
 
-    def authentication_error(self, request, provider_id, error=None, exception=None, extra_context=None):
-        messages.error(request, "Authentication failed. Please try again.")
-        return redirect('login')
+    def _get_email_from_request(self, request):
+        return request.POST.get('email', '').strip().lower()
