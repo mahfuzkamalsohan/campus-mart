@@ -1,1 +1,46 @@
-<h1>Login</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <!-- Logo placeholder -->
+      <img src="logo-placeholder.png" alt="Logo" class="logo">
+    </div>
+    <div class="auth-box">
+      
+      <h2>Log In</h2>
+      <form>
+        <label for="email-username">Email or Username</label>
+        <input type="text" id="email-username" required>
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" required>
+        
+        <div class="toggle-container">
+          <input type="checkbox" id="keep-logged-in">
+          <label for="keep-logged-in">Remember me</label>
+        </div>
+        
+        <button type="submit" class="primary-btn">Log In</button>
+      </form>
+      
+      <div class="divider">or</div>
+      
+      <button class="google-btn">
+        <img src="https://www.google.com/favicon.ico" alt="Google">
+        Log in with Google
+      </button>
+      
+      <div class="switch-link">
+        Don't have an account? <a href="signUp.html">Sign up</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
