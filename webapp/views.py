@@ -21,7 +21,8 @@ import base64
 # Create your views here.
 def welcomepage(request):
     return render(request, 'welcome.html')
-
+def map_view(request):
+    return render(request, 'map.html')
 @login_required
 def create_listing(request):
     if request.method == 'POST':

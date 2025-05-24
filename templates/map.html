@@ -1,0 +1,72 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Marketplace</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="{% static 'explorer.css' %}">
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- <link rel = "stylesheet" href = "explorer.css"> -->
+</head>
+<body>
+  <header class="dashboard">
+    <div class="logo"> <a href="{% url 'explorer' %}"><img src="{% static 'campus-mart-4.png' %}" style="width: 100px; height: 100px;" alt="Logo"></a></div>
+    <div class="search-bar">
+      <form id="searchForm" method="GET" action="{% url 'explorer' %}">
+        <input type="text" id="searchInput" name="q" placeholder="Search listings..." value="{{ search_query }}">
+        <button type="submit"><span class="material-icons">search</span></button>
+      </form>
+    </div>
+
+    <div class="user-actions">
+      <div class="account-wrapper">
+        <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
+        <div class="account-dropdown" id="accountDropdown">
+          <a href="my_listings" class="dropdown-item">My Listings</a>
+          <a href="logoutpage" class="dropdown-item">Logout</a>
+          <!-- <a href="#" class="dropdown-item">Logout</a> -->
+        </div>
+      </div>
+      <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
+    </div>
+  </header>
+
+  <div class="container">
+    
+
+    <main class="main-content">
+      <form id="coord-form">
+        <input type="number" step="any" id="latitude" placeholder="Latitude" required>
+        <input type="number" step="any" id="longitude" placeholder="Longitude" required>
+        <button type="submit">Drop Pin</button>
+      </form>
+      <div id="map" style="height: 500px; width: 100%;"></div>
+
+
+
+    </main>
+  </div>
+
+<script src="{% static 'explorer.js' %}"></script>
+<script src="{% static 'map.js' %}"></script>
+
+
+
+<script>
+  // Initialize map
+  const map = L.map('map').setView([51.505, -0.09], 13);
+  
+  // Add tile layer (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+</script>
+  
+<!-- <script src = "explorer.js"></script> -->
+</body>
+</html>

@@ -41,7 +41,7 @@
                         </p>
                         <div class="listing-actions">
                             <a href="{% url 'listing_detail' listing.pk %}" class="view-details-btn">View</a>
-                            <a href="{% url 'edit_listing' listing.pk %}" class="edit-btn">Edit</a>
+                            <button type="button" class="edit-btn"><a href="{% url 'edit_listing' listing.pk %}">Edit</a></button>
                             <button type="button" class="delete-btn" onclick="confirmDelete('{{ listing.pk }}')">Delete</button>
                         </div>
                         <div class="listing-footer">
