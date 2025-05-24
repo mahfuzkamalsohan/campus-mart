@@ -106,7 +106,7 @@ function switchReceiver(receiverId) {
         <span class="timestamp">10:30 AM</span>
       </div>
       <div class="message sent">
-        <p>Yes, it’s still available!</p>
+        <p>Yes, it's still available!</p>
         <span class="timestamp">10:32 AM</span>
       </div>
     `;
