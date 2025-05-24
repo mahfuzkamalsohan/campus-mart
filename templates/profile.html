@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Marketplace</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'explorer.css' %}">
+  <style>
+    body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard">
+    <div class="logo">
+      <a href="{% url 'explorer' %}">
+      <img src="{% static 'campus-mart-4.png' %}" alt="Logo" width="100px" height="100px" >
+      </a>
+    </div>
+    <div class="search-bar">
+      <form id="searchForm" method="GET" action="#">
+        <input type="text" id="searchInput" name="q" placeholder="Search listings...">
+        <button type="submit"><span class="material-icons">search</span></button>
+      </form>
+    </div>
+
+    <div class="user-actions">
+      <div class="account-wrapper">
+        <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
+        <div class="account-dropdown" id="accountDropdown">
+          <a href="{% url 'my_listings' %}" class="dropdown-item">My Profile</a>
+          <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
+        </div>
+      </div>
+      <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <ul>
+        <li><a href="#" class="create-listing-btn" id="editAccountBtn">Edit Account</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <div class="public-profile">
+        <div class="public-info">
+          <div class="info1">
+            <p>Username: <span id="username"> Sohan321 </span></p>
+            <p>Name: <span id="name">Mahfuz Kamal Sohan</span></p>
+            <p>Email: <span id="email">sohan321@gmail.com</span></p>
+          </div>
+          <div class="info2">
+            <p>University: <span id="university">IUT</span></p>
+            <p>Department: <span id="department">CSE</span></p>
+            <p>Batch: <span id="batch">2023</span></p>
+            <p>Roll: <span id="roll">230041130</span></p>
+          </div>
+          <div class="private-info" style="display: none;">
+            <p>Date of Birth: <span id="dob">1995-05-15</span></p>
+            <p>Phone Number: <span id="phone">+880 1234567890</span></p>
+          </div>
+          <p id="bio">Bio: <span>I am a student of IUknaklsnfknkldmfkldmvkavjkvklmfnfmwkefmkdmvlkdnklfngklndklgmm nfklnkldnkldngklngkldnglknadkflknT</span></p>
+        </div>
+        <div class="profile-picture">
+          <img src="258.png" alt="Profile Picture" width="100vw" height="100vw">
+        </div>
+      </div>
+
+      <!-- Edit Account Form (Hidden by default) -->
+      <div class="edit-account-form" id="editAccountForm" style="display: none;">
+        <h2>Edit Account Details</h2>
+        <form id="accountEditForm">
+          <div class="form-group">
+            <label for="editUsername">Username</label>
+            <input type="text" id="editUsername" name="username" value="Sohan321">
+          </div>
+          <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input type="text" id="editName" name="name" value="Mahfuz Kamal Sohan">
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email</label>
+            <input type="email" id="editEmail" name="email" value="sohan321@gmail.com">
+          </div>
+          <div class="form-group">
+            <label for="editUniversity">University</label>
+            <input type="text" id="editUniversity" name="university" value="IUT">
+          </div>
+          <div class="form-group">
+            <label for="editDepartment">Department</label>
+            <input type="text" id="editDepartment" name="department" value="CSE">
+          </div>
+          <div class="form-group">
+            <label for="editBatch">Batch</label>
+            <input type="text" id="editBatch" name="batch" value="2023">
+          </div>
+          <div class="form-group">
+            <label for="editRoll">Roll Number</label>
+            <input type="text" id="editRoll" name="roll" value="230041130">
+          </div>
+          <div class="form-group">
+            <label for="editDob">Date of Birth</label>
+            <input type="date" id="editDob" name="dob" value="1995-05-15">
+          </div>
+          <div class="form-group">
+            <label for="editPhone">Phone Number</label>
+            <input type="tel" id="editPhone" name="phone" value="+880 1234567890" pattern="[+]?[0-9\s-]+">
+          </div>
+          <div class="form-group">
+            <label for="editBio">Bio</label>
+            <textarea id="editBio" name="bio">I am a student of IUT</textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="save-btn">Save Changes</button>
+            <button type="button" class="cancel-btn" id="cancelEdit">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="{% static 'explorer.js' %}"></script>
+</body>
+</html>

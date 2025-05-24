@@ -22,8 +22,10 @@
       <div class="account-wrapper">
         <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
         <div class="account-dropdown" id="accountDropdown">
+          <a href="{% url 'profile' %}" class="dropdown-item">Profile</a>
           <a href="{% url 'my_listings' %}" class="dropdown-item">My Listings</a>
           <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
+
 
           <a href="{% url 'checkout' %}" class="dropdown-item">Checkout</a>
           <!-- <a href="#" class="dropdown-item">Logout</a> -->

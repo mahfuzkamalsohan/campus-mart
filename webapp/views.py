@@ -23,6 +23,9 @@ from dns.resolver import resolve, NXDOMAIN
 def checkout(request):
     return render(request, 'checkout.html')
 
+def profile(request):
+    return render(request, 'profile.html')
+
 # Create your views here.
 def welcomepage(request):
     return render(request, 'welcome.html')

@@ -17,5 +17,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('map/', views.map_view, name='map_view'),
     path('checkout/', views.checkout, name='checkout'),
+    path('profile/', views.profile, name='profile'),
 ]
 
