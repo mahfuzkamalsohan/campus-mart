@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Marketplace</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'explorer.css' %}">
+  <!-- <link rel = "stylesheet" href = "explorer.css"> -->
 </head>
 <body>
-  
   <header class="dashboard">
     <div class="logo">Logo</div>
     <div class="search-bar">
@@ -22,6 +22,7 @@
         <div class="account-dropdown" id="accountDropdown">
           <a href="#" class="dropdown-item">My Profile</a>
           <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
+          <!-- <a href="#" class="dropdown-item">Logout</a> -->
         </div>
       </div>
       <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
@@ -38,9 +39,9 @@
     </aside>
 
     <main class="main-content">
-      <h1>Hello {{ user.username }}! Welcome to the Marketplace</h1>
+      <h1>Hello {{ user.username }}! Welcome to the Campus Mart</h1>
       <p>
-        Explore listings, connect with peers, and manage your transactions. You're now part of a student-driven community designed to meet your needs. It's 12:41 PM +06 on Saturday, May 24, 2025—start your day with us!
+        Explore listings, connect with peers, and manage your transactions. You're now part of a student-driven community designed to meet your needs. It's 01:30 PM +06 on Saturday, May 24, 2025—start your day with us!
       </p>
 
       <section class="listings-section">
@@ -139,6 +140,7 @@
     </main>
   </div>
 
-  <script src="{% static 'explorer.js' %}"></script>
+<script src="{% static 'explorer.js' %}"></script>
+<!-- <script src = "explorer.js"></script> -->
 </body>
 </html>

@@ -109,6 +109,7 @@ body {
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     z-index: 101;
+    min-width: 120px;
 }
 
 .account-dropdown.active {
@@ -258,6 +259,7 @@ p {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
     animation: slideInRight 0.5s ease-out;
 }
 
@@ -273,6 +275,7 @@ p {
     padding-right: 30px;
     min-width: 120px;
     cursor: pointer;
+    flex: 1 1 100px; /* Allow flexibility but with a minimum width */
 }
 
 .filter-bar select option {
@@ -282,7 +285,7 @@ p {
 
 .listings-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
 
@@ -359,4 +362,117 @@ p {
 @keyframes slideInRight {
     from { opacity: 0; transform: translateX(100px); }
     to { opacity: 1; transform: translateX(0); }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+        padding: 10px;
+        align-items: stretch;
+    }
+
+    .search-bar {
+        margin: 10px 0;
+        max-width: 100%;
+    }
+
+    .user-actions {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .container {
+        flex-direction: column;
+        margin: 10px;
+        max-width: 100%;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 8px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filter-bar select {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
+    .listings-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .listing-card {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .section h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard {
+        padding: 5px;
+    }
+
+    .logo {
+        width: 40px;
+        height: 40px;
+        font-size: 10px;
+    }
+
+    .search-bar input {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .search-bar button {
+        padding: 6px 10px;
+    }
+
+    .user-actions .account-btn, .user-actions .cart-btn {
+        font-size: 12px;
+    }
+
+    .cart-btn .material-icons {
+        font-size: 16px;
+    }
+
+    .sidebar ul li a {
+        font-size: 14px;
+    }
+
+    .listings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .listing-card h4 {
+        font-size: 14px;
+    }
+
+    .listing-card p {
+        font-size: 12px;
+    }
+
+    .view-details-btn {
+        font-size: 12px;
+        padding: 6px;
+    }
 }
