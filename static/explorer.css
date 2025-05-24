@@ -666,7 +666,7 @@ p {
 .cart-menu {
     position: fixed;
     top: 0;
-    right: -4000px;
+    right: -400px;
     width: 400px;
     height: 100%;
     background-color: #1a1a1a;
