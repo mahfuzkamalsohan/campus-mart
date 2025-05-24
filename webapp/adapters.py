@@ -9,8 +9,8 @@ class EduAccountAdapter(DefaultAccountAdapter):
         email = self._get_email_from_request(request)
         if not email.endswith('.edu'):
             messages.error(request, 'Only educational email addresses are allowed')
-            raise ImmediateHttpResponse(redirect('loginpage'))
-        return True
+            raise ImmediateHttpResponse(redirect('loginpage'))  # this *is* the redirect
+        return True  # signup allowed
 
     def clean_email(self, email):
         if not email.endswith('.edu'):
@@ -18,7 +18,7 @@ class EduAccountAdapter(DefaultAccountAdapter):
         return email
 
     def pre_social_login(self, request, sociallogin):
-        email = sociallogin.user.email
+        email = sociallogin.user.email or ''
         if not email.endswith('.edu'):
             messages.error(request, 'Only educational email addresses are allowed')
             raise ImmediateHttpResponse(redirect('loginpage'))

@@ -6,7 +6,8 @@ from django.contrib import auth
 # Create your views here.
 def welcomepage(request):
     return render(request, 'welcomepage.html')
-
+def explorer(request):
+    return render(request, 'explorer.html')
 def loginpage(request):
     if request.method == 'POST':
         username = request.POST['username']

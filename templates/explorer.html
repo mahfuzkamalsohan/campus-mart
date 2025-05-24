@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'explorer.css' %}">
+</head>
+<body>
+  <header class="dashboard">
+    <div class="logo">Logo</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search listings...">
+      <button onclick="handleSearch()"><span class="material-icons">search</span></button>
+    </div>
+    <div class="user-actions">
+      <div class="account-wrapper">
+        <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
+        <div class="account-dropdown" id="accountDropdown">
+          <a href="#" class="dropdown-item">My Profile</a>
+          <a href="#" class="dropdown-item">Logout</a>
+        </div>
+      </div>
+      <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="sidebar">
+      <ul>
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Listings</a></li>
+        <li><a href="#">Profile</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <h1>Welcome to the Marketplace</h1>
+      <p>
+        Explore listings, connect with peers, and manage your transactions. You're now part of a student-driven community designed to meet your needs. It's 12:41 PM +06 on Saturday, May 24, 2025—start your day with us!
+      </p>
+
+      <section class="listings-section">
+        <div class="listings-header">
+          <h3>Listings</h3>
+          <a href="#" class="create-listing-btn">Create Listing</a>
+        </div>
+
+        <div class="filter-bar">
+          <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <optgroup label="Electronics">
+              <option value="mobile">Mobile</option>
+              <option value="laptop">Laptop</option>
+              <option value="powerbank">Powerbank</option>
+              <option value="headphones">Headphones</option>
+              <option value="other_electronics">Other Electronics</option>
+            </optgroup>
+            <optgroup label="Books">
+              <option value="textbooks">Textbooks</option>
+              <option value="novels">Novels</option>
+              <option value="study_guides">Study Guides</option>
+            </optgroup>
+            <optgroup label="Services">
+              <option value="tutoring">Tutoring</option>
+              <option value="freelance">Freelance</option>
+              <option value="other_services">Other Services</option>
+            </optgroup>
+          </select>
+          <select id="priceFilter">
+            <option value="">All Prices</option>
+            <option value="0-50">$0 - $50</option>
+            <option value="51-100">$51 - $100</option>
+            <option value="101-200">$101 - $200</option>
+            <option value="201+">$201+</option>
+          </select>
+          <select id="conditionFilter">
+            <option value="">All Conditions</option>
+            <option value="new">New</option>
+            <option value="like_new">Like New</option>
+            <option value="used">Used</option>
+            <option value="refurbished">Refurbished</option>
+          </select>
+          <select id="universityFilter">
+            <option value="">All Universities</option>
+            <option value="iut">IUT</option>
+            <option value="du">DU</option>
+            <option value="buet">BUET</option>
+            <option value="ru">RU</option>
+            <option value="cu">CU</option>
+            <option value="bu">BU</option>
+            <option value="ruet">RUET</option>
+          </select>
+          <select id="transactionTypeFilter">
+            <option value="">All Transaction Types</option>
+            <option value="buy">Buy</option>
+            <option value="rent">Rent</option>
+            <option value="exchange">Exchange</option>
+          </select>
+        </div>
+
+        <div class="listings-grid">
+          <div class="listing-card">
+            <h4>Bicycle for Sale</h4>
+            <p>A well-maintained bike, perfect for campus commuting.</p>
+            <p class="price">$50</p>
+            <p class="visibility">Visible to: IUT Students</p>
+            <a href="#" class="view-details-btn">View Details</a>
+          </div>
+          <div class="listing-card">
+            <h4>Math Tutoring Service</h4>
+            <p>Offering calculus tutoring for 1st-year students.</p>
+            <p class="price">$15/hr</p>
+            <p class="visibility">Visible to: All Students</p>
+            <a href="#" class="view-details-btn">View Details</a>
+          </div>
+          <div class="listing-card">
+            <h4>Laptop (Budget)</h4>
+            <p>Used laptop in good condition, ideal for students.</p>
+            <p class="price">$200</p>
+            <p class="visibility">Visible to: DU Students</p>
+            <a href="#" class="view-details-btn">View Details</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3>Notifications</h3>
+        <p>You have no new notifications. Start exploring or list your own items!</p>
+      </section>
+
+      <section class="section">
+        <h3>Community Updates</h3>
+        <p>Join discussions and stay updated with campus events.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="{% static 'explorer.js' %}"></script>
+</body>
+</html>
