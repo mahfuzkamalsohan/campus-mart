@@ -23,11 +23,10 @@
             <div class="account-wrapper">
                 <a href="#" class="account-btn" id="accountBtn"><span class="material-icons">account_circle</span> Account</a>
                 <div class="account-dropdown" id="accountDropdown">
-                  <a href="{% url 'my_listings' %}" class="dropdown-item">My Listings</a>
-                  <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
-                  <!-- <a href="#" class="dropdown-item">Logout</a> -->
+                    <a href="{% url 'my_listings' %}" class="dropdown-item">My Listings</a>
+                    <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
                 </div>
-              </div>
+            </div>
             <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
         </div>
     </header>
@@ -52,5 +51,30 @@
     <!-- Custom JS -->
     <script src="{% static 'explorer.js' %}"></script>
     {% block extra_js %}{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountBtn = document.getElementById('accountBtn');
+            const accountDropdown = document.getElementById('accountDropdown');
+
+            // Toggle dropdown when clicking the account button
+            accountBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                accountDropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('active');
+                }
+            });
+
+            // Prevent dropdown from closing when clicking inside it
+            accountDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
 </body>
 </html> 

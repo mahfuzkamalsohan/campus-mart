@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.db.models import Q
 from .forms import ListingForm, ListingImageForm
 from .models import Listing, ListingImage
 import os
@@ -47,8 +48,64 @@ def create_listing(request):
     })
 
 def explorer(request):
-    listings = Listing.objects.filter(is_active=True).order_by('-created_at')
-    return render(request, 'explorer.html', {'listings': listings})
+    # Get search query and filters from request
+    search_query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    price_range = request.GET.get('price', '')
+    condition = request.GET.get('condition', '')
+    university = request.GET.get('university', '')
+    transaction_type = request.GET.get('transaction_type', '')
+
+    # Start with all active listings
+    listings = Listing.objects.filter(is_active=True)
+
+    # Apply search query if provided
+    if search_query:
+        listings = listings.filter(
+            Q(title__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    # Apply category filter
+    if category:
+        listings = listings.filter(category=category)
+
+    # Apply price range filter
+    if price_range:
+        if price_range == '0-50':
+            listings = listings.filter(price__lte=50)
+        elif price_range == '51-100':
+            listings = listings.filter(price__gt=50, price__lte=100)
+        elif price_range == '101-200':
+            listings = listings.filter(price__gt=100, price__lte=200)
+        elif price_range == '201+':
+            listings = listings.filter(price__gt=200)
+
+    # Apply condition filter
+    if condition:
+        listings = listings.filter(condition=condition)
+
+    # Apply university filter
+    if university:
+        listings = listings.filter(university=university)
+
+    # Apply transaction type filter
+    if transaction_type:
+        listings = listings.filter(transaction_type=transaction_type)
+
+    # Order by creation date (newest first)
+    listings = listings.order_by('-created_at')
+
+    context = {
+        'listings': listings,
+        'search_query': search_query,
+        'selected_category': category,
+        'selected_price': price_range,
+        'selected_condition': condition,
+        'selected_university': university,
+        'selected_transaction_type': transaction_type,
+    }
+    return render(request, 'explorer.html', context)
 
 def loginpage(request):
     if request.method == 'POST':

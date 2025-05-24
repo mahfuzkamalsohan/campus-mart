@@ -13,8 +13,10 @@
   <header class="dashboard">
     <div class="logo">Logo</div>
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search listings...">
-      <button onclick="handleSearch()"><span class="material-icons">search</span></button>
+      <form id="searchForm" method="GET" action="{% url 'explorer' %}">
+        <input type="text" id="searchInput" name="q" placeholder="Search listings..." value="{{ search_query }}">
+        <button type="submit"><span class="material-icons">search</span></button>
+      </form>
     </div>
     <div class="user-actions">
       <div class="account-wrapper">
@@ -51,63 +53,73 @@
         </div>
 
         <div class="filter-bar">
-          <select id="categoryFilter">
-            <option value="">All Categories</option>
-            <optgroup label="Electronics">
-              <option value="mobile">Mobile</option>
-              <option value="laptop">Laptop</option>
-              <option value="powerbank">Powerbank</option>
-              <option value="headphones">Headphones</option>
-              <option value="other_electronics">Other Electronics</option>
-            </optgroup>
-            <optgroup label="Books">
-              <option value="textbooks">Textbooks</option>
-              <option value="novels">Novels</option>
-              <option value="study_guides">Study Guides</option>
-            </optgroup>
-            <optgroup label="Services">
-              <option value="tutoring">Tutoring</option>
-              <option value="freelance">Freelance</option>
-              <option value="other_services">Other Services</option>
-            </optgroup>
-          </select>
-          <select id="priceFilter">
-            <option value="">All Prices</option>
-            <option value="0-50">$0 - $50</option>
-            <option value="51-100">$51 - $100</option>
-            <option value="101-200">$101 - $200</option>
-            <option value="201+">$201+</option>
-          </select>
-          <select id="conditionFilter">
-            <option value="">All Conditions</option>
-            <option value="new">New</option>
-            <option value="like_new">Like New</option>
-            <option value="used">Used</option>
-            <option value="refurbished">Refurbished</option>
-          </select>
-          <select id="universityFilter">
-            <option value="">All Universities</option>
-            <option value="iut">IUT</option>
-            <option value="du">DU</option>
-            <option value="buet">BUET</option>
-            <option value="ru">RU</option>
-            <option value="cu">CU</option>
-            <option value="bu">BU</option>
-            <option value="ruet">RUET</option>
-          </select>
-          <select id="transactionTypeFilter">
-            <option value="">All Transaction Types</option>
-            <option value="buy">Buy</option>
-            <option value="rent">Rent</option>
-            <option value="exchange">Exchange</option>
-          </select>
+          <form id="filterForm" method="GET" action="{% url 'explorer' %}">
+            {% if search_query %}
+              <input type="hidden" name="q" value="{{ search_query }}">
+            {% endif %}
+            
+            <select name="category" id="categoryFilter" onchange="this.form.submit()">
+              <option value="">All Categories</option>
+              <optgroup label="Electronics">
+                <option value="mobile" {% if selected_category == 'mobile' %}selected{% endif %}>Mobile</option>
+                <option value="laptop" {% if selected_category == 'laptop' %}selected{% endif %}>Laptop</option>
+                <option value="powerbank" {% if selected_category == 'powerbank' %}selected{% endif %}>Powerbank</option>
+                <option value="headphones" {% if selected_category == 'headphones' %}selected{% endif %}>Headphones</option>
+                <option value="other_electronics" {% if selected_category == 'other_electronics' %}selected{% endif %}>Other Electronics</option>
+              </optgroup>
+              <optgroup label="Books">
+                <option value="textbooks" {% if selected_category == 'textbooks' %}selected{% endif %}>Textbooks</option>
+                <option value="novels" {% if selected_category == 'novels' %}selected{% endif %}>Novels</option>
+                <option value="study_guides" {% if selected_category == 'study_guides' %}selected{% endif %}>Study Guides</option>
+              </optgroup>
+              <optgroup label="Services">
+                <option value="tutoring" {% if selected_category == 'tutoring' %}selected{% endif %}>Tutoring</option>
+                <option value="freelance" {% if selected_category == 'freelance' %}selected{% endif %}>Freelance</option>
+                <option value="other_services" {% if selected_category == 'other_services' %}selected{% endif %}>Other Services</option>
+              </optgroup>
+            </select>
+
+            <select name="price" id="priceFilter" onchange="this.form.submit()">
+              <option value="">All Prices</option>
+              <option value="0-50" {% if selected_price == '0-50' %}selected{% endif %}>$0 - $50</option>
+              <option value="51-100" {% if selected_price == '51-100' %}selected{% endif %}>$51 - $100</option>
+              <option value="101-200" {% if selected_price == '101-200' %}selected{% endif %}>$101 - $200</option>
+              <option value="201+" {% if selected_price == '201+' %}selected{% endif %}>$201+</option>
+            </select>
+
+            <select name="condition" id="conditionFilter" onchange="this.form.submit()">
+              <option value="">All Conditions</option>
+              <option value="new" {% if selected_condition == 'new' %}selected{% endif %}>New</option>
+              <option value="like_new" {% if selected_condition == 'like_new' %}selected{% endif %}>Like New</option>
+              <option value="used" {% if selected_condition == 'used' %}selected{% endif %}>Used</option>
+              <option value="refurbished" {% if selected_condition == 'refurbished' %}selected{% endif %}>Refurbished</option>
+            </select>
+
+            <select name="university" id="universityFilter" onchange="this.form.submit()">
+              <option value="">All Universities</option>
+              <option value="iut" {% if selected_university == 'iut' %}selected{% endif %}>IUT</option>
+              <option value="du" {% if selected_university == 'du' %}selected{% endif %}>DU</option>
+              <option value="buet" {% if selected_university == 'buet' %}selected{% endif %}>BUET</option>
+              <option value="ru" {% if selected_university == 'ru' %}selected{% endif %}>RU</option>
+              <option value="cu" {% if selected_university == 'cu' %}selected{% endif %}>CU</option>
+              <option value="bu" {% if selected_university == 'bu' %}selected{% endif %}>BU</option>
+              <option value="ruet" {% if selected_university == 'ruet' %}selected{% endif %}>RUET</option>
+            </select>
+
+            <select name="transaction_type" id="transactionTypeFilter" onchange="this.form.submit()">
+              <option value="">All Transaction Types</option>
+              <option value="buy" {% if selected_transaction_type == 'buy' %}selected{% endif %}>Buy</option>
+              <option value="rent" {% if selected_transaction_type == 'rent' %}selected{% endif %}>Rent</option>
+              <option value="exchange" {% if selected_transaction_type == 'exchange' %}selected{% endif %}>Exchange</option>
+            </select>
+          </form>
         </div>
 
         <div class="listings-grid">
           {% for listing in listings %}
           <div class="listing-card">
             {% if listing.images.exists %}
-            <img src="{{ listing.images.first.image.url }}" alt="{{ listing.title }}" class="listing-image">
+            <img src="{{ listing.images.first.image.url }}" alt="{{ listing.title }}" class="listing-image" style="height: 200px; object-fit: cover;">
             {% endif %}
             <h4>{{ listing.title }}</h4>
             <p>{{ listing.description|truncatewords:20 }}</p>
@@ -117,8 +129,13 @@
           </div>
           {% empty %}
           <div class="no-listings">
-            <p>No listings available. Be the first to create one!</p>
-            <a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a>
+            <p>No listings found matching your criteria.</p>
+            {% if search_query or selected_category or selected_price or selected_condition or selected_university or selected_transaction_type %}
+              <a href="{% url 'explorer' %}" class="clear-filters-btn">Clear Filters</a>
+            {% else %}
+              <p>Be the first to create one!</p>
+              <a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a>
+            {% endif %}
           </div>
           {% endfor %}
         </div>
