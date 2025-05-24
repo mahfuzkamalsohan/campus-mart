@@ -6,11 +6,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.db.models import Q
 from .forms import ListingForm, ListingImageForm
 from .models import Listing, ListingImage
 import os
+from groq import Groq
+from django.core.files.storage import default_storage
+from django.conf import settings
+from datetime import datetime
+import base64
+
 
 # Create your views here.
 def welcomepage(request):
@@ -131,6 +137,103 @@ def signuppage(request):
         return redirect('loginpage')
         
     return render(request, 'signup.html')
+
+def get_chatbot_response(image_data, request):
+    try:
+        # Encode image in base64
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        image_data_url = f"data:image/jpeg;base64,{image_base64}"
+            
+        client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+        completion = client.chat.completions.create(
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "What's in this image? write the product name or type strictly in the following format: The product you are searching for is a bicycle, laptop, ps5 etc."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": image_data_url
+                            }
+                        }
+                    ]
+                }
+            ],
+            temperature=1,
+            max_completion_tokens=1024,
+            top_p=1,
+            stream=False,
+            stop=None,
+        )
+        return completion.choices[0].message.content
+    except Exception as e:
+        print(f"Error in get_chatbot_response: {str(e)}")
+        return "Sorry, I couldn't analyze the image at this time."
+
+@csrf_exempt
+def chatbot(request):
+    if request.method == 'POST':
+        try:
+            message = request.POST.get('message', '')
+            image = request.FILES.get('image')
+            
+            response_data = {
+                'message': f"Received your message: {message}"
+            }
+            
+            if image:
+                try:
+                    # Read the image data
+                    image_data = image.read()
+                    
+                    # Create chat_images directory if it doesn't exist
+                    chat_images_dir = os.path.join(settings.MEDIA_ROOT, 'chat_images')
+                    os.makedirs(chat_images_dir, exist_ok=True)
+                    
+                    # Save the uploaded image
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    filename = f'chat_images/{timestamp}_{image.name}'
+                    file_path = default_storage.save(filename, image)
+                    
+                    # Get the URL for the saved image
+                    image_url = default_storage.url(file_path)
+                    response_data['image_url'] = image_url
+                    
+                    # Get AI response for the image
+                    ai_response = get_chatbot_response(image_data, request)
+                    response_data['message'] = ai_response
+                    
+                    # Clean up the response keyword
+                    response_keyword = response_data['message'].strip().lower()
+                    # Remove trailing punctuation
+                    response_keyword = response_keyword.rstrip('.,!?')
+                    # Remove any extra whitespace
+                    response_keyword = ' '.join(response_keyword.split())
+                    print(response_keyword)
+                    #render(request, 'explorer.html', {'query': response_keyword})
+                except Exception as e:
+                    print(f"Error processing image: {str(e)}")
+                    response_data['message'] = "Error processing image. Please try again."
+            product_name = response_keyword.split("is ")[-1]
+            print(product_name)
+            search(request, product_name)
+            return JsonResponse(response_data)
+            
+        except Exception as e:
+            print(f"Error in chatbot view: {str(e)}")
+            return JsonResponse({
+                'error': 'An error occurred while processing your request. Please try again.'
+            }, status=500)
+    
+    return render(request, 'chatbot.html')
+def search(request, product_name):
+    return render(request, 'explorer.html', {'query': product_name})
+    
 
 def logoutpage(request):
     auth.logout(request)

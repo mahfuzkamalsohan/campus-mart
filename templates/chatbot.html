@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Mart ChatBot</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #212121;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #1a1a1a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #3f3f3f;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #2d2d2d;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .logo h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #9cbde7;
+        }
+
+        .new-chat {
+            background-color: #9cbde7;
+            color: #000000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .new-chat:hover {
+            background-color: #356b9d;
+        }
+
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #212121;
+        }
+
+        .chat-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message-bot, .message-user {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background-color: #9cbde7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000000;
+            flex-shrink: 0;
+        }
+
+        .text {
+            background-color: #2d2d2d;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #ffffff;
+            line-height: 1.5;
+        }
+
+        .message-user .text {
+            background-color: #9cbde7;
+            color: #000000;
+        }
+
+        .message-image {
+            margin-top: 10px;
+            max-width: 300px;
+        }
+
+        .message-image img {
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #3f3f3f;
+        }
+
+        .message-bot .message-image {
+            margin-top: 10px;
+        }
+
+        .message-user .message-image {
+            margin-top: 10px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-top: 1px solid #3f3f3f;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            background-color: #2d2d2d;
+            padding: 10px;
+            border-radius: 8px;
+            align-items: flex-end;
+        }
+
+        textarea {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            resize: none;
+            padding: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            max-height: 150px;
+            outline: none;
+        }
+
+        textarea::placeholder {
+            color: #6c757d;
+        }
+
+        .image-upload-label {
+            color: #9cbde7;
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .image-upload-label:hover {
+            color: #356b9d;
+        }
+
+        #send-button {
+            background-color: #9cbde7;
+            color: #000000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #send-button:hover {
+            background-color: #356b9d;
+        }
+
+        #image-preview {
+            margin-top: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        #preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 4px;
+        }
+
+        #remove-image {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #3f3f3f;
+            }
+
+            .message-bot, .message-user {
+                max-width: 90%;
+            }
+        }
+
+        .search-button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .search-button i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+           <img src="https://chat.openai.com/favicon.ico" alt="ChatGPT">
+           <h2>ChatBot</h2>
+        </div>
+        <button class="new-chat" onclick="startNewChat()">New Chat</button>
+    </div>
+    <div class="main">
+        <div class="chat-area" id="chat-area">
+            <div class="message-bot">
+                <div class="avatar">G</div>
+                <div class="text">Hello {{ user.username }}, how can I help you today?</div>
+            </div>
+        </div>
+        <div class="input-area">
+            <form id="chat-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-wrapper">
+                    <textarea id="user-input" name="message" placeholder="Type your message here..." rows="1"></textarea>
+                    <label for="image-upload" class="image-upload-label">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
+                    <button type="submit" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div id="image-preview" style="display: none;">
+                    <img id="preview" src="" alt="Image preview">
+                    <button type="button" id="remove-image">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatArea = document.getElementById('chat-area');
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const preview = document.getElementById('preview');
+            const removeImage = document.getElementById('remove-image');
+
+            // Auto-resize textarea
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle image upload
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        imagePreview.style.display = 'inline-block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Remove image
+            removeImage.addEventListener('click', function() {
+                imageUpload.value = '';
+                imagePreview.style.display = 'none';
+                preview.src = '';
+            });
+
+            // Handle form submission
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const message = userInput.value.trim();
+                if (message || imageUpload.files.length > 0) {
+                    // Add user message to chat
+                    addMessage(message, true);
+                    
+                    // Create FormData object
+                    const formData = new FormData(chatForm);
+                    
+                    // Show loading message
+                    const loadingMessage = addMessage("Processing your request...", false);
+                    
+                    // Send to backend
+                    fetch('/chatbot/', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remove loading message
+                        loadingMessage.remove();
+                        
+                        // Clean up the response text to get just the product name
+                        let productName = data.message;
+                        if (productName) {
+                            // Remove the prefix "The product you are searching for is"
+                            productName = productName.replace(/^The product you are searching for is\s+/i, '');
+                            // Remove any trailing punctuation
+                            productName = productName.replace(/[.,!?]+$/, '');
+                            // Trim whitespace
+                            productName = productName.trim();
+                        }
+                        
+                        // Add bot response
+                        if (data.image_url) {
+                            // If response includes an image
+                            const messageDiv = addMessageWithImage(data.message, data.image_url, false);
+                            
+                            // Add search button if we have a product name
+                            if (productName) {
+                                const searchButton = document.createElement('button');
+                                searchButton.className = 'search-button';
+                                searchButton.innerHTML = '<i class="fas fa-search"></i> Search for this product';
+                                searchButton.onclick = function() {
+                                    window.location.href = `/?q=${encodeURIComponent(productName)}`;
+                                };
+                                
+                                const textDiv = messageDiv.querySelector('.text');
+                                textDiv.appendChild(document.createElement('br'));
+                                textDiv.appendChild(searchButton);
+                            }
+                        } else {
+                            // If response is text only
+                            const messageDiv = addMessage(data.message, false);
+                            
+                            // Add search button if we have a product name
+                            if (productName) {
+                                const searchButton = document.createElement('button');
+                                searchButton.className = 'search-button';
+                                searchButton.innerHTML = '<i class="fas fa-search"></i> Search for this product';
+                                searchButton.onclick = function() {
+                                    window.location.href = `/?q=${encodeURIComponent(productName)}`;
+                                };
+                                
+                                const textDiv = messageDiv.querySelector('.text');
+                                textDiv.appendChild(document.createElement('br'));
+                                textDiv.appendChild(searchButton);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        // Remove loading message
+                        loadingMessage.remove();
+                        // Show error message
+                        addMessage("Sorry, there was an error processing your request.", false);
+                        console.error('Error:', error);
+                    });
+                    
+                    // Clear input and reset image preview
+                    userInput.value = '';
+                    userInput.style.height = 'auto';
+                    imageUpload.value = '';
+                    imagePreview.style.display = 'none';
+                    preview.src = '';
+                }
+            });
+        });
+
+        function addMessage(text, isUser) {
+            const chatArea = document.getElementById('chat-area');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isUser ? 'message-user' : 'message-bot';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = isUser ? 'U' : 'G';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'text';
+            textDiv.textContent = text;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(textDiv);
+            chatArea.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatArea.scrollTop = chatArea.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        function addMessageWithImage(text, imageUrl, isUser) {
+            const chatArea = document.getElementById('chat-area');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isUser ? 'message-user' : 'message-bot';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = isUser ? 'U' : 'G';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'text';
+            
+            if (text) {
+                const textDiv = document.createElement('p');
+                textDiv.textContent = text;
+                contentDiv.appendChild(textDiv);
+            }
+            
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'message-image';
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'Response image';
+            imageDiv.appendChild(img);
+            contentDiv.appendChild(imageDiv);
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            chatArea.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatArea.scrollTop = chatArea.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        function startNewChat() {
+            const chatArea = document.getElementById('chat-area');
+            chatArea.innerHTML = `
+                <div class="message-bot">
+                    <div class="avatar">G</div>
+                    <div class="text">Hello {{ user.username }}, how can I help you today?</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+    </html>

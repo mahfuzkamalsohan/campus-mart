@@ -13,5 +13,7 @@ urlpatterns = [
     path('listings/<int:pk>/delete/', views.delete_listing, name='delete_listing'),
     path('listings/image/<int:image_id>/delete/', views.delete_listing_image, name='delete_listing_image'),
     path('my-listings/', views.my_listings, name='my_listings'),
+    path('chatbot/', views.chatbot, name='chatbot'),
+    path('search/', views.search, name='search'),
 ]
 
