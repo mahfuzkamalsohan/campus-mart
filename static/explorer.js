@@ -1,3 +1,9 @@
+function toggleCart() {
+    const cartMenu = document.getElementById('cartMenu');
+    cartMenu.classList.toggle('open');
+}
+
+
 function handleSearch() {
     const searchInput = document.getElementById('searchInput').value;
     if (searchInput.trim() === '') {
@@ -32,6 +38,7 @@ function toggleDropdown() {
     const dropdown = document.getElementById('accountDropdown');
     dropdown.classList.toggle('active');
 }
+
 
 function closeDropdown(event) {
     const dropdown = document.getElementById('accountDropdown');
@@ -150,3 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         firstRecipient.classList.add('active');
     }
 });
+
+
+

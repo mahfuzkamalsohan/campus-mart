@@ -16,5 +16,6 @@ urlpatterns = [
     path('chatbot/', views.chatbot, name='chatbot'),
     path('search/', views.search, name='search'),
     path('map/', views.map_view, name='map_view'),
+    path('checkout/', views.checkout, name='checkout'),
 ]
 

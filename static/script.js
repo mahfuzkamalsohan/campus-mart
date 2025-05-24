@@ -1,3 +1,8 @@
+function toggleCart() {
+  const cartMenu = document.getElementById('cartMenu');
+  cartMenu.classList.toggle('open');
+}
+
 function handleSearch() {
   const searchInput = document.getElementById('searchInput').value;
   if (searchInput.trim() === '') {
@@ -57,10 +62,6 @@ document.addEventListener('click', closeDropdown);
 
 
 
-function toggleCart() {
-  const cartMenu = document.getElementById('cartMenu');
-  cartMenu.classList.toggle('open');
-}
 
 function moveCarousel(button, direction) {
   const carousel = button.parentElement.querySelector('.carousel-images');

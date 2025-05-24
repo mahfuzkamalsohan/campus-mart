@@ -24,10 +24,13 @@
         <div class="account-dropdown" id="accountDropdown">
           <a href="{% url 'my_listings' %}" class="dropdown-item">My Listings</a>
           <a href="{% url 'logoutpage' %}" class="dropdown-item">Logout</a>
+
+          <a href="{% url 'checkout' %}" class="dropdown-item">Checkout</a>
           <!-- <a href="#" class="dropdown-item">Logout</a> -->
         </div>
       </div>
-      <a href="#" class="cart-btn"><span class="material-icons">shopping_cart</span> <span id="cartCount">0</span></a>
+      <a href="#" class="cart-btn"><span class="material-icons" onclick="toggleCart()">shopping_cart</span> <span id="cartCount">0</span></a>
+      
     </div>
   </header>
 
@@ -59,60 +62,84 @@
               <input type="hidden" name="q" value="{{ search_query }}">
             {% endif %}
             
-            <select name="category" id="categoryFilter" onchange="this.form.submit()">
-              <option value="">All Categories</option>
-              <optgroup label="Electronics">
-                <option value="mobile" {% if selected_category == 'mobile' %}selected{% endif %}>Mobile</option>
-                <option value="laptop" {% if selected_category == 'laptop' %}selected{% endif %}>Laptop</option>
-                <option value="powerbank" {% if selected_category == 'powerbank' %}selected{% endif %}>Powerbank</option>
-                <option value="headphones" {% if selected_category == 'headphones' %}selected{% endif %}>Headphones</option>
-                <option value="other_electronics" {% if selected_category == 'other_electronics' %}selected{% endif %}>Other Electronics</option>
-              </optgroup>
-              <optgroup label="Books">
-                <option value="textbooks" {% if selected_category == 'textbooks' %}selected{% endif %}>Textbooks</option>
-                <option value="novels" {% if selected_category == 'novels' %}selected{% endif %}>Novels</option>
-                <option value="study_guides" {% if selected_category == 'study_guides' %}selected{% endif %}>Study Guides</option>
-              </optgroup>
-              <optgroup label="Services">
-                <option value="tutoring" {% if selected_category == 'tutoring' %}selected{% endif %}>Tutoring</option>
-                <option value="freelance" {% if selected_category == 'freelance' %}selected{% endif %}>Freelance</option>
-                <option value="other_services" {% if selected_category == 'other_services' %}selected{% endif %}>Other Services</option>
-              </optgroup>
-            </select>
+            <div class="filter-group">
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="" {% if not selected_sort %}selected{% endif %}>Newest First</option>
+                    <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </div>
 
-            <select name="price" id="priceFilter" onchange="this.form.submit()">
-              <option value="">All Prices</option>
-              <option value="0-50" {% if selected_price == '0-50' %}selected{% endif %}>$0 - $50</option>
-              <option value="51-100" {% if selected_price == '51-100' %}selected{% endif %}>$51 - $100</option>
-              <option value="101-200" {% if selected_price == '101-200' %}selected{% endif %}>$101 - $200</option>
-              <option value="201+" {% if selected_price == '201+' %}selected{% endif %}>$201+</option>
-            </select>
+            <div class="filter-group">
+                <label for="categoryFilter">Category:</label>
+                <select name="category" id="categoryFilter" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    <optgroup label="Electronics">
+                        <option value="mobile" {% if selected_category == 'mobile' %}selected{% endif %}>Mobile</option>
+                        <option value="laptop" {% if selected_category == 'laptop' %}selected{% endif %}>Laptop</option>
+                        <option value="powerbank" {% if selected_category == 'powerbank' %}selected{% endif %}>Powerbank</option>
+                        <option value="headphones" {% if selected_category == 'headphones' %}selected{% endif %}>Headphones</option>
+                        <option value="other_electronics" {% if selected_category == 'other_electronics' %}selected{% endif %}>Other Electronics</option>
+                    </optgroup>
+                    <optgroup label="Books">
+                        <option value="textbooks" {% if selected_category == 'textbooks' %}selected{% endif %}>Textbooks</option>
+                        <option value="novels" {% if selected_category == 'novels' %}selected{% endif %}>Novels</option>
+                        <option value="study_guides" {% if selected_category == 'study_guides' %}selected{% endif %}>Study Guides</option>
+                    </optgroup>
+                    <optgroup label="Services">
+                        <option value="tutoring" {% if selected_category == 'tutoring' %}selected{% endif %}>Tutoring</option>
+                        <option value="freelance" {% if selected_category == 'freelance' %}selected{% endif %}>Freelance</option>
+                        <option value="other_services" {% if selected_category == 'other_services' %}selected{% endif %}>Other Services</option>
+                    </optgroup>
+                </select>
+            </div>
 
-            <select name="condition" id="conditionFilter" onchange="this.form.submit()">
-              <option value="">All Conditions</option>
-              <option value="new" {% if selected_condition == 'new' %}selected{% endif %}>New</option>
-              <option value="like_new" {% if selected_condition == 'like_new' %}selected{% endif %}>Like New</option>
-              <option value="used" {% if selected_condition == 'used' %}selected{% endif %}>Used</option>
-              <option value="refurbished" {% if selected_condition == 'refurbished' %}selected{% endif %}>Refurbished</option>
-            </select>
+            <div class="filter-group">
+                <label for="priceFilter">Price Range:</label>
+                <select name="price" id="priceFilter" onchange="this.form.submit()">
+                    <option value="">All Prices</option>
+                    <option value="0-50" {% if selected_price == '0-50' %}selected{% endif %}>$0 - $50</option>
+                    <option value="51-100" {% if selected_price == '51-100' %}selected{% endif %}>$51 - $100</option>
+                    <option value="101-200" {% if selected_price == '101-200' %}selected{% endif %}>$101 - $200</option>
+                    <option value="201+" {% if selected_price == '201+' %}selected{% endif %}>$201+</option>
+                </select>
+            </div>
 
-            <select name="university" id="universityFilter" onchange="this.form.submit()">
-              <option value="">All Universities</option>
-              <option value="iut" {% if selected_university == 'iut' %}selected{% endif %}>IUT</option>
-              <option value="du" {% if selected_university == 'du' %}selected{% endif %}>DU</option>
-              <option value="buet" {% if selected_university == 'buet' %}selected{% endif %}>BUET</option>
-              <option value="ru" {% if selected_university == 'ru' %}selected{% endif %}>RU</option>
-              <option value="cu" {% if selected_university == 'cu' %}selected{% endif %}>CU</option>
-              <option value="bu" {% if selected_university == 'bu' %}selected{% endif %}>BU</option>
-              <option value="ruet" {% if selected_university == 'ruet' %}selected{% endif %}>RUET</option>
-            </select>
+            <div class="filter-group">
+                <label for="conditionFilter">Condition:</label>
+                <select name="condition" id="conditionFilter" onchange="this.form.submit()">
+                    <option value="">All Conditions</option>
+                    <option value="new" {% if selected_condition == 'new' %}selected{% endif %}>New</option>
+                    <option value="like_new" {% if selected_condition == 'like_new' %}selected{% endif %}>Like New</option>
+                    <option value="used" {% if selected_condition == 'used' %}selected{% endif %}>Used</option>
+                    <option value="refurbished" {% if selected_condition == 'refurbished' %}selected{% endif %}>Refurbished</option>
+                </select>
+            </div>
 
-            <select name="transaction_type" id="transactionTypeFilter" onchange="this.form.submit()">
-              <option value="">All Transaction Types</option>
-              <option value="buy" {% if selected_transaction_type == 'buy' %}selected{% endif %}>Buy</option>
-              <option value="rent" {% if selected_transaction_type == 'rent' %}selected{% endif %}>Rent</option>
-              <option value="exchange" {% if selected_transaction_type == 'exchange' %}selected{% endif %}>Exchange</option>
-            </select>
+            <div class="filter-group">
+                <label for="universityFilter">University:</label>
+                <select name="university" id="universityFilter" onchange="this.form.submit()">
+                    <option value="">All Universities</option>
+                    <option value="iut" {% if selected_university == 'iut' %}selected{% endif %}>IUT</option>
+                    <option value="du" {% if selected_university == 'du' %}selected{% endif %}>DU</option>
+                    <option value="buet" {% if selected_university == 'buet' %}selected{% endif %}>BUET</option>
+                    <option value="ru" {% if selected_university == 'ru' %}selected{% endif %}>RU</option>
+                    <option value="cu" {% if selected_university == 'cu' %}selected{% endif %}>CU</option>
+                    <option value="bu" {% if selected_university == 'bu' %}selected{% endif %}>BU</option>
+                    <option value="ruet" {% if selected_university == 'ruet' %}selected{% endif %}>RUET</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="transactionTypeFilter">Transaction Type:</label>
+                <select name="transaction_type" id="transactionTypeFilter" onchange="this.form.submit()">
+                    <option value="">All Transaction Types</option>
+                    <option value="buy" {% if selected_transaction_type == 'buy' %}selected{% endif %}>Buy</option>
+                    <option value="rent" {% if selected_transaction_type == 'rent' %}selected{% endif %}>Rent</option>
+                    <option value="exchange" {% if selected_transaction_type == 'exchange' %}selected{% endif %}>Exchange</option>
+                </select>
+            </div>
           </form>
         </div>
 
@@ -152,6 +179,24 @@
         <p>Join discussions and stay updated with campus events.</p>
       </section>
     </main>
+  </div>
+  <div class="cart-menu" id="cartMenu" style="display: none;">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close" onclick="toggleCart()">✖</button>
+    </div>
+    <div class="cart-items">
+      <!-- Example Cart Item -->
+      <div class="cart-item">
+        <img src="item1.jpg" alt="Item Image">
+        <div class="cart-item-info">
+          <p>Laptop</p>
+          <p>$800</p>
+        </div>
+      </div>
+      <!-- Add more cart-item divs dynamically -->
+    </div>
+    <button class="cart-checkout" onclick="window.location.href='{% url 'checkout' %}'">Proceed to Checkout</button>
   </div>
   
 

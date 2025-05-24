@@ -295,36 +295,36 @@
     <div class="chatbot">
         <div class="chat-header">
             <div class="logo"> <a href="{% url 'explorer' %}"><img src="{% static 'campus-mart-4.png' %}" style="width: 50px; height: 50px;" alt="Logo"></a></div>
-            <h2>ChatBot</h2>
+           <h2>ChatBot</h2>
         </div>
         <div class="chat-content">
-            <div class="chat-area" id="chat-area">
-                <div class="message-bot">
+        <div class="chat-area" id="chat-area">
+            <div class="message-bot">
                     <div class="avatar">CM</div>
                     <div class="text">Hello {{ user.username }}, how can I help you today?</div>
                 </div>
-            </div>
-            <div class="input-area">
-                <form id="chat-form" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="input-wrapper">
-                        <textarea id="user-input" name="message" placeholder="Type your message here..." rows="1"></textarea>
-                        <label for="image-upload" class="image-upload-label">
-                            <i class="fas fa-image"></i>
-                        </label>
-                        <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
-                        <button type="submit" id="send-button">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                    <div id="image-preview" style="display: none;">
-                        <img id="preview" src="" alt="Image preview">
-                        <button type="button" id="remove-image">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
+        </div>
+        <div class="input-area">
+            <form id="chat-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-wrapper">
+                    <textarea id="user-input" name="message" placeholder="Type your message here..." rows="1"></textarea>
+                    <label for="image-upload" class="image-upload-label">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="image-upload" name="image" accept="image/*" style="display: none;">
+                    <button type="submit" id="send-button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div id="image-preview" style="display: none;">
+                    <img id="preview" src="" alt="Image preview">
+                    <button type="button" id="remove-image">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
         </div>
     </div>
 
@@ -515,4 +515,4 @@
         }
     </script>
 </body>
-</html>
+    </html>

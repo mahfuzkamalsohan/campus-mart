@@ -16,13 +16,20 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from datetime import datetime
 import base64
+import re
+from django.core.validators import EmailValidator
+from dns.resolver import resolve, NXDOMAIN
 
+def checkout(request):
+    return render(request, 'checkout.html')
 
 # Create your views here.
 def welcomepage(request):
     return render(request, 'welcome.html')
+
 def map_view(request):
     return render(request, 'map.html')
+
 @login_required
 def create_listing(request):
     if request.method == 'POST':
@@ -62,6 +69,7 @@ def explorer(request):
     condition = request.GET.get('condition', '')
     university = request.GET.get('university', '')
     transaction_type = request.GET.get('transaction_type', '')
+    sort_by = request.GET.get('sort', '')  # Get sorting parameter
 
     # Start with all active listings
     listings = Listing.objects.filter(is_active=True)
@@ -100,8 +108,14 @@ def explorer(request):
     if transaction_type:
         listings = listings.filter(transaction_type=transaction_type)
 
-    # Order by creation date (newest first)
-    listings = listings.order_by('-created_at')
+    # Apply sorting
+    if sort_by == 'price_asc':
+        listings = listings.order_by('price')
+    elif sort_by == 'price_desc':
+        listings = listings.order_by('-price')
+    else:
+        # Default sorting by creation date (newest first)
+        listings = listings.order_by('-created_at')
 
     context = {
         'listings': listings,
@@ -111,6 +125,7 @@ def explorer(request):
         'selected_condition': condition,
         'selected_university': university,
         'selected_transaction_type': transaction_type,
+        'selected_sort': sort_by,  # Add selected sort to context
     }
     return render(request, 'explorer.html', context)
 
@@ -132,7 +147,26 @@ def signuppage(request):
        
         user = User.objects.create_user(username=username, email=email, password=password)
         user.save()
-        if not email.endswith('.edu'):
+        # Validate email format, .edu domain and check if email exists
+        
+        
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu$'
+        if not re.match(email_pattern, email):
+            user.delete()
+            return render(request, 'signup.html', {'error': 'Please use a valid .edu email address'})
+            
+        # Validate email format
+        try:
+            EmailValidator()(email)
+        except:
+            user.delete() 
+            return render(request, 'signup.html', {'error': 'Invalid email'})
+            
+        # Check if domain exists and has MX records
+        domain = email.split('@')[1]
+        try:
+            resolve(domain, 'MX')
+        except NXDOMAIN:
             user.delete()
             return render(request, 'signup.html', {'error': 'Only educational mails allowed'})
         return redirect('loginpage')
