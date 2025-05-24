@@ -11,7 +11,7 @@
 </head>
 <body>
   <header class="dashboard">
-    <div class="logo">Logo</div>
+    <div class="logo"> <a href="{% url 'explorer' %}"><img src="{% static 'campus-mart-4.png' %}" style="width: 100px; height: 100px;" alt="Logo"></a></div>
     <div class="search-bar">
       <form id="searchForm" method="GET" action="{% url 'explorer' %}">
         <input type="text" id="searchInput" name="q" placeholder="Search listings..." value="{{ search_query }}">
@@ -36,7 +36,7 @@
       <ul>
         <li class="active"><a href="{% url 'explorer' %}">Home</a></li>
         <li><a href="{% url 'my_listings' %}">My Listings</a></li>
-        <li><a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a></li>
+        <!-- <li><a href="{% url 'create_listing' %}" class="create-listing-btn">Create Listing</a></li> -->
       </ul>
     </aside>
 

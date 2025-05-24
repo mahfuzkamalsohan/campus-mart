@@ -20,7 +20,7 @@ import base64
 
 # Create your views here.
 def welcomepage(request):
-    return render(request, 'welcomepage.html')
+    return render(request, 'welcome.html')
 
 @login_required
 def create_listing(request):
